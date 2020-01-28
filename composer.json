@@ -1,0 +1,12 @@
+{
+  "name": "websk/php-crud",
+  "require": {
+    "websk/php-config": "1.0.*",
+    "websk/php-utils": "1.0.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  }
+}
