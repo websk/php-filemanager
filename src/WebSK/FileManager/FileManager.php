@@ -43,15 +43,11 @@ class FileManager
      * @param string $file_name
      * @return bool
      */
-    public function removeFile(string $file_name)
+    public function deleteFile(string $file_name)
     {
         $file_path = $this->getFilePath($file_name);
 
-        if (!file_exists($file_path)) {
-            return false;
-        }
-
-        return unlink($file_path);
+        return FileUtils::deleteFile($file_path);
     }
 
     /**
