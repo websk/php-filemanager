@@ -1,5 +1,5 @@
 {
-  "name": "websk/php-crud",
+  "name": "websk/php-filemanager",
   "require": {
     "websk/php-config": "1.0.*",
     "websk/php-utils": "1.0.*"
