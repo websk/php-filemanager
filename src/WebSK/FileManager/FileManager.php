@@ -4,6 +4,8 @@ namespace WebSK\FileManager;
 
 
 use WebSK\Config\ConfWrapper;
+use WebSK\Storage\StorageFactory;
+use WebSK\Storage\StorageInterface;
 
 /**
  * Class FileManager
@@ -11,13 +13,11 @@ use WebSK\Config\ConfWrapper;
  */
 class FileManager
 {
-    const DEFAULT_FILES_FOLDER = 'files';
+    /** @var string */
+    protected $root_path;
 
     /** @var string */
-    protected $files_root_path;
-
-    /** @var string */
-    protected $files_url_path;
+    protected $url_path;
 
     /** @var array */
     protected $allowed_extension = [];
@@ -25,42 +25,23 @@ class FileManager
     /** @var array */
     protected $allowed_types = [];
 
+    /** @var StorageInterface */
+    protected $storage;
+
     /**
      * FileManager constructor.
-     * @param string $files_root_path
-     * @param string $files_url_path
-     * @param array $allowed_extension
-     * @param array $allowed_types
+     * @param string $storage_name
      */
-    public function __construct(
-        string $files_root_path = '',
-        string $files_url_path = '',
-        array $allowed_extension = [],
-        array $allowed_types = []
-    ) {
-        if ($files_root_path) {
-            $this->files_root_path = $files_root_path;
-        } else {
-            $this->files_root_path = ConfWrapper::value('files_root_path');
-        }
+    public function __construct(string $storage_name)
+    {
+        $storage_config = ConfWrapper::value('storages.' . $storage_name, []);
 
-        if ($files_url_path) {
-            $this->files_url_path = $files_url_path;
-        } else {
-            $this->files_url_path = ConfWrapper::value('files_url_path', self::DEFAULT_FILES_FOLDER);
-        }
+        $this->root_path = $storage_config['root_path'] ?? '';
+        $this->url_path = $storage_config['url_path'] ?? '';
+        $this->allowed_extension = $storage_config['allowed_extension'] ?? '';
+        $this->allowed_types = $storage_config['allowed_types'] ?? '';
 
-        if ($allowed_extension) {
-            $this->allowed_extension = $allowed_extension;
-        } else {
-            $this->allowed_extension = ConfWrapper::value('files_allowed_extension', []);
-        }
-
-        if ($allowed_types) {
-            $this->allowed_types = $allowed_types;
-        } else {
-            $this->allowed_types = ConfWrapper::value('files_allowed_types', []);
-        }
+        $this->storage = StorageFactory::factory($storage_config);
     }
 
     /**
@@ -71,7 +52,11 @@ class FileManager
     {
         $file_path = $this->getFilePath($file_name);
 
-        return FileUtils::deleteFile($file_path);
+        if (!$this->storage->has($file_path)) {
+            return false;
+        }
+
+        return $this->storage->delete($file_path);
     }
 
     /**
@@ -164,17 +149,17 @@ class FileManager
     /**
      * @return string
      */
-    public function getFilesRootPath()
+    public function getRootPath()
     {
-        return $this->files_root_path;
+        return $this->root_path;
     }
 
     /**
      * @return string
      */
-    public function getFilesUrlPath(): string
+    public function getUrlPath(): string
     {
-        return $this->files_url_path;
+        return $this->url_path;
     }
 
     /**
@@ -183,7 +168,7 @@ class FileManager
      */
     public function getFilePath(string $file_name)
     {
-        return $this->getFilesRootPath() . DIRECTORY_SEPARATOR . $file_name;
+        return $this->getRootPath() . DIRECTORY_SEPARATOR . $file_name;
     }
 
     /**
@@ -192,7 +177,7 @@ class FileManager
      */
     public function getFileUrl(string $file_name)
     {
-        return $this->getFilesUrlPath() . DIRECTORY_SEPARATOR . $file_name;
+        return $this->getUrlPath() . DIRECTORY_SEPARATOR . $file_name;
     }
 
     /**
