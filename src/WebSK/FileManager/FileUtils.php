@@ -2,7 +2,6 @@
 
 namespace WebSK\FileManager;
 
-use WebSK\Config\ConfWrapper;
 use WebSK\Utils\HTTP;
 
 /**
@@ -60,7 +59,7 @@ class FileUtils
 
         $dirs = @opendir($directory);
         while (($filedirs = readdir($dirs)) !== false) {
-            if ($filedirs != "." and $filedirs != "..") {
+            if (($filedirs != ".") && ($filedirs != "..")) {
                 if (is_dir($directory . DIRECTORY_SEPARATOR . $filedirs)) {
                     self::deleteDir($directory . DIRECTORY_SEPARATOR . $filedirs);
                 } else {

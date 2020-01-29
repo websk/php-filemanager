@@ -1,6 +1,7 @@
 {
   "name": "websk/php-filemanager",
   "require": {
+    "ext-mbstring": "*",
     "websk/php-config": "1.0.*",
     "websk/php-utils": "1.0.*"
   },

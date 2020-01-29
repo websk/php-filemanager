@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0533546ba38edde3d8f13f764642e3a7",
+    "content-hash": "497f0b9a5ff7e8e46eedb791fd965052",
     "packages": [
         {
             "name": "websk/php-config",
@@ -65,6 +65,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-mbstring": "*"
+    },
     "platform-dev": []
 }
