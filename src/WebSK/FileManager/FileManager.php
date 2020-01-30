@@ -50,13 +50,11 @@ class FileManager
     }
 
     /**
-     * @param string $file_name
+     * @param string $file_path
      * @return bool
      */
-    public function deleteFile(string $file_name)
+    public function deleteFile(string $file_path)
     {
-        $file_path = $this->getFilePath($file_name);
-
         if (!$this->storage->has($file_path)) {
             return false;
         }
@@ -105,7 +103,7 @@ class FileManager
         $upload_file_path = self::UPLOAD_FOLDER . '/' . $file_name;
 
         $stream = fopen($tmp_file_path, 'r+');
-        $this->storage->writeStream(
+        $response = $this->storage->writeStream(
             $upload_file_path,
             $stream
         );
@@ -124,27 +122,18 @@ class FileManager
      */
     public function storeFile(string $file_name, string $upload_file_path, string $target_folder)
     {
-        $file_path_in_file_components_arr = [];
-        if ($target_folder != '') {
-            $file_path_in_file_components_arr[] = $target_folder;
-        }
-
-        $unique_filename = $this->getUniqueFileName($file_name);
-        $file_path_in_file_components_arr[] = $unique_filename;
-
-        $new_name = implode(DIRECTORY_SEPARATOR, $file_path_in_file_components_arr);
-
-        $new_path = $this->getFilePath($new_name);
-
-        $destination_file_path = pathinfo($new_path, PATHINFO_DIRNAME);
-        if (!$this->storage->has($destination_file_path)) {
-            if (!$this->storage->createDir($destination_file_path)) {
-                throw new \Exception('Не удалось создать директорию: ' . $destination_file_path);
+        if (!$this->storage->has($target_folder)) {
+            if (!$this->storage->createDir($target_folder)) {
+                throw new \Exception('Не удалось создать директорию: ' . $target_folder);
             }
         }
 
-        if (!$this->storage->rename($upload_file_path, $new_path)) {
-            throw new \Exception('Не удалось переместить файл: ' . $upload_file_path . ' -> ' . $new_path);
+        $unique_filename = $this->getUniqueFileName($file_name);
+
+        $destination_file_path = DIRECTORY_SEPARATOR . $target_folder . DIRECTORY_SEPARATOR . $unique_filename;
+
+        if (!$this->storage->rename($upload_file_path, $destination_file_path)) {
+            throw new \Exception('Не удалось переместить файл: ' . $upload_file_path . ' -> ' . $destination_file_path);
         }
 
         return $unique_filename;
