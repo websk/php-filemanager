@@ -18,13 +18,9 @@ class StorageFactory
      */
     public static function factory(array $config)
     {
-        if (!isset($config['adapter'])) {
-            throw new \Exception('A adapter must be specified');
-        }
-
         $adapter = AdapterFactory::factory($config);
 
-        switch ($adapter) {
+        switch ($config['adapter']) {
             case 'local':
                 return new LocalStorage($adapter);
         }
