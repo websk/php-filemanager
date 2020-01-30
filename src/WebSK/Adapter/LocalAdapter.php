@@ -17,11 +17,11 @@ class LocalAdapter implements AdapterConnectionInterface
      */
     public function connect(array $config): AdapterInterface
     {
-        if (!isset($config['path'])) {
-            throw new \Exception('A path must be specified');
+        if (!isset($config['root_path'])) {
+            throw new \Exception('A root path must be specified');
         }
 
-        $path = $config['path'];
+        $path = $config['root_path'];
         $write_flags = $config['write_flags'] ?? LOCK_EX;
         $link_handling = $config['link_handling'] ?? Local::DISALLOW_LINKS;
         $permissions = $config['permissions'] ?? [];
