@@ -2,28 +2,33 @@
 
 namespace WebSK\Storage;
 
+use WebSK\Adapter\AdapterFactory;
+
 /**
  * Class StorageFactory
  * @package WebSK\Storage
  */
 class StorageFactory
 {
+
     /**
-     * @param array $storage_config
-     * @return LocalStorage
+     * @param array $config
+     * @return StorageInterface
      * @throws \Exception
      */
-    public static function factory(array $storage_config)
+    public static function factory(array $config)
     {
-        if (!isset($storage_config['adapter'])) {
+        if (!isset($config['adapter'])) {
             throw new \Exception('A adapter must be specified');
         }
 
-        switch ($storage_config['adapter']) {
+        $adapter = AdapterFactory::factory($config);
+
+        switch ($adapter) {
             case 'local':
-                return new LocalStorage($storage_config['root_path']);
+                return new LocalStorage($adapter);
         }
 
-        throw new \Exception("Unsupported adapter " . $storage_config['adapter']);
+        throw new \Exception("Unsupported adapter " . $config['adapter']);
     }
 }

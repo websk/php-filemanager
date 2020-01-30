@@ -2,7 +2,6 @@
 
 namespace WebSK\FileManager;
 
-
 use WebSK\Config\ConfWrapper;
 use WebSK\Storage\StorageFactory;
 use WebSK\Storage\StorageInterface;
@@ -13,6 +12,8 @@ use WebSK\Storage\StorageInterface;
  */
 class FileManager
 {
+    const UPLOAD_FOLDER = 'uploads';
+
     /** @var string */
     protected $root_path;
 
@@ -35,6 +36,10 @@ class FileManager
     public function __construct(string $storage_name)
     {
         $storage_config = ConfWrapper::value('storages.' . $storage_name, []);
+
+        if (!isset($storage_config)) {
+            throw new \Exception('A config must be specified');
+        }
 
         $this->root_path = $storage_config['root_path'] ?? '';
         $this->url_path = $storage_config['url_path'] ?? '';
@@ -69,9 +74,9 @@ class FileManager
     public function storeUploadedFile($file, string $target_folder, &$error = null)
     {
         $file_name = $file['name'];
-        $tmp_file_name = $file['tmp_name'];
+        $tmp_file_path = $file['tmp_name'];
 
-        if (!\is_uploaded_file($tmp_file_name)) {
+        if (!\is_uploaded_file($tmp_file_path)) {
             $error = 'Не удалось загрузить файл';
             return '';
         }
@@ -97,16 +102,27 @@ class FileManager
             return '';
         }
 
-        return $this->storeFile($file_name, $tmp_file_name, $target_folder);
+        $upload_file_path = self::UPLOAD_FOLDER . '/' . $file_name;
+
+        $stream = fopen($tmp_file_path, 'r+');
+        $this->storage->writeStream(
+            $upload_file_path,
+            $stream
+        );
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+
+        return $this->storeFile($file_name, $upload_file_path, $target_folder);
     }
 
     /**
      * @param string $file_name
-     * @param string $tmp_file_name
+     * @param string $upload_file_path
      * @param string $target_folder
      * @return string
      */
-    public function storeFile(string $file_name, string $tmp_file_name, string $target_folder)
+    public function storeFile(string $file_name, string $upload_file_path, string $target_folder)
     {
         $file_path_in_file_components_arr = [];
         if ($target_folder != '') {
@@ -121,14 +137,14 @@ class FileManager
         $new_path = $this->getFilePath($new_name);
 
         $destination_file_path = pathinfo($new_path, PATHINFO_DIRNAME);
-        if (!is_dir($destination_file_path)) {
-            if (!mkdir($destination_file_path, 0777, true)) {
+        if (!$this->storage->has($destination_file_path)) {
+            if (!$this->storage->createDir($destination_file_path)) {
                 throw new \Exception('Не удалось создать директорию: ' . $destination_file_path);
             }
         }
 
-        if (!rename($tmp_file_name, $new_path)) {
-            throw new \Exception('Не удалось переместить файл: ' . $tmp_file_name . ' -> ' . $new_path);
+        if (!$this->storage->rename($upload_file_path, $new_path)) {
+            throw new \Exception('Не удалось переместить файл: ' . $upload_file_path . ' -> ' . $new_path);
         }
 
         return $unique_filename;
