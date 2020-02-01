@@ -21,7 +21,7 @@ class FileManager
     protected $url_path;
 
     /** @var array */
-    protected $allowed_extension = [];
+    protected $allowed_extensions = [];
 
     /** @var array */
     protected $allowed_types = [];
@@ -43,7 +43,7 @@ class FileManager
 
         $this->root_path = $storage_config['root_path'] ?? '';
         $this->url_path = $storage_config['url_path'] ?? '';
-        $this->allowed_extension = $storage_config['allowed_extension'] ?? '';
+        $this->allowed_extensions = $storage_config['allowed_extensions'] ?? '';
         $this->allowed_types = $storage_config['allowed_types'] ?? '';
 
         $this->storage = StorageFactory::factory($storage_config);
@@ -79,7 +79,7 @@ class FileManager
             return '';
         }
 
-        $allowed_extensions = $this->getAllowedExtension();
+        $allowed_extensions = $this->getAllowedExtensions();
         $allowed_types = $this->getAllowedTypes();
 
         $file_info = new \SplFileInfo($file_name);
@@ -188,9 +188,9 @@ class FileManager
     /**
      * @return array
      */
-    public function getAllowedExtension(): array
+    public function getAllowedExtensions(): array
     {
-        return $this->allowed_extension;
+        return $this->allowed_extensions;
     }
 
     /**
