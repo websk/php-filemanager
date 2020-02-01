@@ -152,6 +152,14 @@ class FileManager
     }
 
     /**
+     * @return StorageInterface
+     */
+    public function getStorage(): StorageInterface
+    {
+        return $this->storage;
+    }
+
+    /**
      * @return string
      */
     public function getRootPath()
