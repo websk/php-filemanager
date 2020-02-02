@@ -14,8 +14,6 @@ class FileManager
 {
     const STORAGES_CONFIG_KEY = 'storages';
 
-    const UPLOAD_FOLDER = 'uploads';
-
     /** @var string */
     protected $url_path;
 
