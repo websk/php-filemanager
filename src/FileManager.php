@@ -39,8 +39,8 @@ class FileManager
         }
 
         $this->url_path = $storage_config['url_path'] ?? '';
-        $this->allowed_extensions = $storage_config['allowed_extensions'] ?? '';
-        $this->allowed_types = $storage_config['allowed_types'] ?? '';
+        $this->allowed_extensions = $storage_config['allowed_extensions'] ?? [];
+        $this->allowed_types = $storage_config['allowed_types'] ?? [];
 
         $this->storage = StorageFactory::factory($storage_config);
     }
