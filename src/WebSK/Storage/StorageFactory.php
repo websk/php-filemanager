@@ -1,8 +1,10 @@
 <?php
 
-namespace WebSK\Storage;
+namespace WebSK\FileManager\Storage;
 
-use WebSK\Adapter\AdapterFactory;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemInterface;
+use WebSK\FileManager\Adapter\AdapterFactory;
 
 /**
  * Class StorageFactory
@@ -13,7 +15,7 @@ class StorageFactory
 
     /**
      * @param array $config
-     * @return StorageInterface
+     * @return FilesystemInterface
      * @throws \Exception
      */
     public static function factory(array $config)
@@ -22,7 +24,9 @@ class StorageFactory
 
         switch ($config['adapter']) {
             case 'local':
-                return new LocalStorage($adapter);
+            case 's3':
+            case 'sftp':
+                return new Filesystem($adapter);
         }
 
         throw new \Exception("Unsupported adapter " . $config['adapter']);

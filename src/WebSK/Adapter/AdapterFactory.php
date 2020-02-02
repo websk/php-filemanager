@@ -1,6 +1,6 @@
 <?php
 
-namespace WebSK\Adapter;
+namespace WebSK\FileManager\Adapter;
 
 use League\Flysystem\AdapterInterface;
 
@@ -17,15 +17,15 @@ class AdapterFactory
      */
     public static function factory(array $config)
     {
-        return self::createAdapter($config)->connect($config);
+        return self::createConnector($config)->getAdapter($config);
     }
 
     /**
      * @param array $config
-     * @return AdapterConnectionInterface
+     * @return AdapterConnectorInterface
      * @throws \Exception
      */
-    public static function createAdapter(array $config)
+    public static function createConnector(array $config)
     {
         if (!isset($config['adapter'])) {
             throw new \Exception('A adapter must be specified');
@@ -33,7 +33,11 @@ class AdapterFactory
 
         switch ($config['adapter']) {
             case 'local':
-                return new LocalAdapter();
+                return new LocalAdapterConnector();
+            case 's3':
+                return new S3AdapterConnector();
+            case 'sftp':
+                return new SftpAdapterConnector();
         }
 
         throw new \Exception("Unsupported adapter " . $config['adapter']);

@@ -1,6 +1,6 @@
 <?php
 
-namespace WebSK\Adapter;
+namespace WebSK\FileManager\Adapter;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
@@ -9,16 +9,16 @@ use League\Flysystem\AdapterInterface;
  * Class LocalAdapter
  * @package WebSK\Adapter
  */
-class LocalAdapter implements AdapterConnectionInterface
+class LocalAdapterConnector implements AdapterConnectorInterface
 {
     /**
      * @param array $config
      * @return AdapterInterface
      */
-    public function connect(array $config): AdapterInterface
+    public function getAdapter(array $config): AdapterInterface
     {
-        if (!isset($config['root_path'])) {
-            throw new \Exception('A root path must be specified');
+        if (!array_key_exists('root_path', $config)) {
+            throw new \Exception('The local connector requires root_path configuration.');
         }
 
         $path = $config['root_path'];
