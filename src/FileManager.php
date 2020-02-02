@@ -46,6 +46,19 @@ class FileManager
     }
 
     /**
+     * @param string $file_path
+     * @return bool
+     */
+    public function deleteFileIfExist(string $file_path)
+    {
+        if (!$this->storage->has($file_path)) {
+            return false;
+        }
+
+        return $this->storage->delete($file_path);
+    }
+
+    /**
      * @param $file
      * @param string $target_folder
      * @param string $save_as
@@ -134,7 +147,7 @@ class FileManager
      */
     public function getUrlPath(): string
     {
-        return $this->url_path;
+        return str_replace('\\', '/', $this->url_path);
     }
 
     /**
@@ -143,7 +156,7 @@ class FileManager
      */
     public function getFileUrl(string $file_name)
     {
-        return $this->getUrlPath() . DIRECTORY_SEPARATOR . $file_name;
+        return $this->getUrlPath() . '/' . str_replace('\\', '/', $file_name);
     }
 
     /**
