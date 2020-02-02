@@ -81,13 +81,13 @@ class FileManager
 
         $file_info = new \SplFileInfo($file_name);
 
-        if (!in_array($file["type"], $allowed_types)) {
+        if ($allowed_types && !in_array($file["type"], $allowed_types)) {
             $error = 'File type ' . $file['type'] . ' ' . $file_name . ' not supported';
             return '';
         }
 
         $file_extension = mb_strtolower($file_info->getExtension());
-        if (!in_array($file_extension, $allowed_extensions)) {
+        if ($allowed_extensions && !in_array($file_extension, $allowed_extensions)) {
             $error = 'File extension ' . $file_extension . ' ' . $file_name . ' not supported';
             return '';
         }
