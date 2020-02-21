@@ -15,6 +15,9 @@ class FileManager
     const STORAGES_CONFIG_KEY = 'storages';
 
     /** @var string */
+    protected $root_path;
+
+    /** @var string */
     protected $url_path;
 
     /** @var array */
@@ -38,6 +41,7 @@ class FileManager
             throw new \Exception('A config must be specified');
         }
 
+        $this->root_path = $storage_config['root_path'] ?? '';
         $this->url_path = $storage_config['url_path'] ?? '';
         $this->allowed_extensions = $storage_config['allowed_extensions'] ?? [];
         $this->allowed_types = $storage_config['allowed_types'] ?? [];
@@ -140,6 +144,14 @@ class FileManager
     public function getStorage(): FilesystemInterface
     {
         return $this->storage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootPath(): string
+    {
+        return $this->root_path;
     }
 
     /**
