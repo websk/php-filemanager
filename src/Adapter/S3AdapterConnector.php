@@ -3,8 +3,8 @@
 namespace WebSK\FileManager\Adapter;
 
 use Aws\S3\S3Client;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\AwsS3v3\AwsS3V3Adapter;
 
 /**
  * Class S3AdapterConnector
@@ -25,9 +25,9 @@ class S3AdapterConnector implements AdapterConnectorInterface
 
     /**
      * @param array $config
-     * @return AdapterInterface
+     * @return FilesystemAdapter
      */
-    public function getAdapter(array $config): AdapterInterface
+    public function getAdapter(array $config): FilesystemAdapter
     {
         if (!array_key_exists('bucket', $config)) {
             throw new \Exception('The awss3 connector requires bucket configuration.');
@@ -52,6 +52,6 @@ class S3AdapterConnector implements AdapterConnectorInterface
             'retries' => $config['retries'], // Configures the maximum number of allowed retries for a client
         ]);
 
-        return new AwsS3Adapter($s3_client, $config['bucket']);
+        return new AwsS3V3Adapter($s3_client, $config['bucket']);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace WebSK\FileManager\Adapter;
 
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\FilesystemAdapter;
 
 /**
  * Interface AdapterConnectorInterface
@@ -12,7 +12,7 @@ interface AdapterConnectorInterface
 {
     /**
      * @param array $config
-     * @return AdapterInterface
+     * @return FilesystemAdapter
      */
-    public function getAdapter(array $config): AdapterInterface;
+    public function getAdapter(array $config): FilesystemAdapter;
 }

@@ -1,11 +1,12 @@
 {
   "name": "websk/php-filemanager",
   "require": {
+    "php": "^8.3",
     "ext-mbstring": "*",
-    "websk/php-config": "1.0.*",
-    "league/flysystem": "^1.0",
-    "league/flysystem-aws-s3-v3": "^1.0",
-    "league/flysystem-sftp": "^1.0"
+    "websk/php-config": "2.0.*",
+    "league/flysystem": "2.1.1.0",
+    "league/flysystem-aws-s3-v3": "2.*",
+    "league/flysystem-sftp-v3": "2.*"
   },
   "autoload": {
     "psr-4": {

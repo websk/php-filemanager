@@ -2,7 +2,7 @@
 
 namespace WebSK\FileManager\Adapter;
 
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\FilesystemAdapter;
 
 /**
  * Class AdapterFactory
@@ -12,7 +12,7 @@ class AdapterFactory
 {
     /**
      * @param array $config
-     * @return AdapterInterface
+     * @return FilesystemAdapter
      * @throws \Exception
      */
     public static function factory(array $config)

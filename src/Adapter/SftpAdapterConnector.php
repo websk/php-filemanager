@@ -2,8 +2,9 @@
 
 namespace WebSK\FileManager\Adapter;
 
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\Sftp\SftpAdapter;
+use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\PhpseclibV3\SftpAdapter;
+use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
 
 /**
  * Class SftpAdapterConnector
@@ -19,15 +20,14 @@ class SftpAdapterConnector implements AdapterConnectorInterface
         'privateKey' => '',
         'passphrase' => '',
         'root' => '',
-        'timeout' => 10,
-        'directoryPerm' => 0755
+        'timeout' => 10
     ];
 
     /**
      * @param array $config
-     * @return AdapterInterface
+     * @return FilesystemAdapter
      */
-    public function getAdapter(array $config): AdapterInterface
+    public function getAdapter(array $config): FilesystemAdapter
     {
         if (!array_key_exists('host', $config)) {
             throw new \Exception('The sftp connector requires host configuration.');
@@ -35,6 +35,17 @@ class SftpAdapterConnector implements AdapterConnectorInterface
 
         $config = array_replace_recursive($this->config, $config);
 
-        return new SftpAdapter($config);
+        $connection_provider = new SftpConnectionProvider(
+            $config['host'],
+            $config['username'],
+            $config['password'],
+            $config['privateKey'],
+            $config['passphrase'],
+            $config['port'],
+            false,
+            $config['timeout']
+        );
+
+        return new SftpAdapter($connection_provider, $config['root']);
     }
 }

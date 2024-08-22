@@ -3,7 +3,6 @@
 namespace WebSK\FileManager\Storage;
 
 use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemInterface;
 use WebSK\FileManager\Adapter\AdapterFactory;
 
 /**
@@ -15,7 +14,7 @@ class StorageFactory
 
     /**
      * @param array $config
-     * @return FilesystemInterface
+     * @return Filesystem
      * @throws \Exception
      */
     public static function factory(array $config)

@@ -2,7 +2,8 @@
 
 namespace WebSK\FileManager;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemException;
 use WebSK\Config\ConfWrapper;
 use WebSK\FileManager\Storage\StorageFactory;
 
@@ -12,22 +13,17 @@ use WebSK\FileManager\Storage\StorageFactory;
  */
 class FileManager
 {
-    const STORAGES_CONFIG_KEY = 'storages';
+    const string STORAGES_CONFIG_KEY = 'storages';
 
-    /** @var string */
-    protected $root_path;
+    protected string $root_path;
 
-    /** @var string */
-    protected $url_path;
+    protected string $url_path;
 
-    /** @var array */
-    protected $allowed_extensions = [];
+    protected array $allowed_extensions = [];
 
-    /** @var array */
-    protected $allowed_types = [];
+    protected array $allowed_types = [];
 
-    /** @var FilesystemInterface */
-    protected $storage;
+    protected Filesystem $storage;
 
     /**
      * FileManager constructor.
@@ -49,17 +45,17 @@ class FileManager
         $this->storage = StorageFactory::factory($storage_config);
     }
 
-    /**
+    /**r
      * @param string $file_path
-     * @return bool
+     * @throws FilesystemException
      */
     public function deleteFileIfExist(string $file_path)
     {
-        if (!$this->storage->has($file_path)) {
-            return false;
+        if (!$this->storage->fileExists($file_path)) {
+            return;
         }
 
-        return $this->storage->delete($file_path);
+        $this->storage->delete($file_path);
     }
 
     /**
@@ -68,9 +64,9 @@ class FileManager
      * @param string $save_as
      * @param string|null $error
      * @return string
-     * @throws \Exception
+     * @throws FilesystemException
      */
-    public function storeUploadedFile($file, string $target_folder, $save_as = '', &$error = null)
+    public function storeUploadedFile($file, string $target_folder, string $save_as = '', &$error = null)
     {
         $file_name = $file['name'];
         $tmp_file_path = $file['tmp_name'];
@@ -101,10 +97,8 @@ class FileManager
             return '';
         }
 
-        if (!$this->storage->has($target_folder)) {
-            if (!$this->storage->createDir($target_folder)) {
-                throw new \Exception('Failed to create directory: ' . $target_folder);
-            }
+        if (!$this->storage->fileExists($target_folder)) {
+            $this->storage->createDirectory($target_folder);
         }
 
         if ($save_as) {
@@ -112,15 +106,13 @@ class FileManager
         }
 
         $destination_file_path = DIRECTORY_SEPARATOR . $target_folder . DIRECTORY_SEPARATOR . $file_name;
-        while ($this->storage->has($destination_file_path)) {
+        while ($this->storage->fileExists($destination_file_path)) {
             $file_name = $this->getUniqueFileName($file_name);
             $destination_file_path = DIRECTORY_SEPARATOR . $target_folder . DIRECTORY_SEPARATOR . $file_name;
         }
 
         $stream = fopen($tmp_file_path, 'r+');
-        if (!$this->storage->writeStream($destination_file_path, $stream)) {
-            throw new \Exception('Failed to upload file in ' . $destination_file_path);
-        }
+        $this->storage->writeStream($destination_file_path, $stream);
 
         if (is_resource($stream)) {
             fclose($stream);
@@ -139,9 +131,9 @@ class FileManager
     }
 
     /**
-     * @return FilesystemInterface
+     * @return Filesystem
      */
-    public function getStorage(): FilesystemInterface
+    public function getStorage(): Filesystem
     {
         return $this->storage;
     }
