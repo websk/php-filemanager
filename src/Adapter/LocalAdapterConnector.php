@@ -4,6 +4,8 @@ namespace WebSK\FileManager\Adapter;
 
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use League\MimeTypeDetection\FinfoMimeTypeDetector;
 
 /**
  * Class LocalAdapter
@@ -22,10 +24,11 @@ class LocalAdapterConnector implements AdapterConnectorInterface
         }
 
         $path = $config['root_path'];
+        $visibility = new PortableVisibilityConverter();
         $write_flags = $config['write_flags'] ?? LOCK_EX;
         $link_handling = $config['link_handling'] ?? LocalFilesystemAdapter::DISALLOW_LINKS;
-        $permissions = $config['permissions'] ?? [];
+        $mime_type_detector = new FinfoMimeTypeDetector();
 
-        return new LocalFilesystemAdapter($path, $write_flags, $link_handling, $permissions);
+        return new LocalFilesystemAdapter($path, $visibility, $write_flags, $link_handling, $mime_type_detector);
     }
 }

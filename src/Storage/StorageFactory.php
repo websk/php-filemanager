@@ -17,7 +17,7 @@ class StorageFactory
      * @return Filesystem
      * @throws \Exception
      */
-    public static function factory(array $config)
+    public static function factory(array $config): Filesystem
     {
         $adapter = AdapterFactory::factory($config);
 

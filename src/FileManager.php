@@ -49,7 +49,7 @@ class FileManager
      * @param string $file_path
      * @throws FilesystemException
      */
-    public function deleteFileIfExist(string $file_path)
+    public function deleteFileIfExist(string $file_path): void
     {
         if (!$this->storage->fileExists($file_path)) {
             return;
@@ -62,11 +62,11 @@ class FileManager
      * @param $file
      * @param string $target_folder
      * @param string $save_as
-     * @param string|null $error
+     * @param $error
      * @return string
      * @throws FilesystemException
      */
-    public function storeUploadedFile($file, string $target_folder, string $save_as = '', &$error = null)
+    public function storeUploadedFile($file, string $target_folder, string $save_as = '', &$error = null): string
     {
         $file_name = $file['name'];
         $tmp_file_path = $file['tmp_name'];
@@ -125,7 +125,7 @@ class FileManager
      * @param string $file_name
      * @return string
      */
-    public function getUniqueFileName(string $file_name)
+    public function getUniqueFileName(string $file_name): string
     {
         return uniqid(md5($file_name), true) . "_" . $file_name;
     }
@@ -158,7 +158,7 @@ class FileManager
      * @param string $file_name
      * @return string
      */
-    public function getFileUrl(string $file_name)
+    public function getFileUrl(string $file_name): string
     {
         return $this->getUrlPath() . '/' . str_replace('\\', '/', $file_name);
     }

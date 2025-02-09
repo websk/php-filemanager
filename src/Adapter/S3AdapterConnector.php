@@ -12,8 +12,7 @@ use League\Flysystem\AwsS3v3\AwsS3V3Adapter;
  */
 class S3AdapterConnector implements AdapterConnectorInterface
 {
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'url' => 'http://localhost:9000',
         'access_key' => '',
         'secret_key' => '',

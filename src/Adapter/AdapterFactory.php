@@ -15,7 +15,7 @@ class AdapterFactory
      * @return FilesystemAdapter
      * @throws \Exception
      */
-    public static function factory(array $config)
+    public static function factory(array $config): FilesystemAdapter
     {
         return self::createConnector($config)->getAdapter($config);
     }
@@ -25,7 +25,7 @@ class AdapterFactory
      * @return AdapterConnectorInterface
      * @throws \Exception
      */
-    public static function createConnector(array $config)
+    public static function createConnector(array $config): AdapterConnectorInterface
     {
         if (!isset($config['adapter'])) {
             throw new \Exception('A adapter must be specified');

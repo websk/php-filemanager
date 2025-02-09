@@ -12,7 +12,7 @@ use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
  */
 class SftpAdapterConnector implements AdapterConnectorInterface
 {
-    protected $config = [
+    protected array $config = [
         'host'       => 'localhost',
         'port'       => 22,
         'username'   => '',
