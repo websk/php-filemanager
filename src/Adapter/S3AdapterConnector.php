@@ -4,7 +4,7 @@ namespace WebSK\FileManager\Adapter;
 
 use Aws\S3\S3Client;
 use League\Flysystem\FilesystemAdapter;
-use League\Flysystem\AwsS3v3\AwsS3V3Adapter;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 
 /**
  * Class S3AdapterConnector
