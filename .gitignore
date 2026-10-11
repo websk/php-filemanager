@@ -1,3 +1,5 @@
-.idea/
-config/config.php
-vendor/
+/.idea/
+/.phpunit.cache/
+/config/config.php
+/dist/
+/vendor/

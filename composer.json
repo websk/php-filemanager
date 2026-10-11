@@ -1,16 +1,59 @@
 {
   "name": "websk/php-filemanager",
+  "description": "File storage abstraction for local, Amazon S3, and SFTP backends.",
+  "type": "library",
+  "license": "MIT",
   "require": {
-    "php": "^8.3",
+    "ext-fileinfo": "*",
     "ext-mbstring": "*",
-    "websk/php-config": "2.0.*",
-    "league/flysystem": "2.1.1.0",
-    "league/flysystem-aws-s3-v3": "2.*",
-    "league/flysystem-sftp-v3": "2.*"
+    "league/flysystem": "^3.36",
+    "league/flysystem-local": "^3.35",
+    "php": "^8.3",
+    "websk/php-config": "2.2.*"
+  },
+  "require-dev": {
+    "league/flysystem-aws-s3-v3": "^3.35",
+    "league/flysystem-sftp-v3": "^3.36",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^12.5"
+  },
+  "suggest": {
+    "league/flysystem-aws-s3-v3": "Required for S3 storage; install with composer require league/flysystem-aws-s3-v3:^3.35.",
+    "league/flysystem-sftp-v3": "Required for SFTP storage; install with composer require league/flysystem-sftp-v3:^3.36."
   },
   "autoload": {
     "psr-4": {
       "WebSK\\FileManager\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WebSK\\FileManager\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "lint": "find src config tests -name '*.php' -print0 | xargs -0 -n1 php -l",
+    "test": "phpunit",
+    "analyse": "phpstan analyse --no-progress --debug --memory-limit=512M",
+    "check": [
+      "@lint",
+      "@test",
+      "@analyse"
+    ]
+  },
+  "config": {
+    "platform": {
+      "php": "8.3.0"
+    },
+    "sort-packages": true
+  },
+  "archive": {
+    "exclude": [
+      "/.github",
+      "/.idea",
+      "/.phpunit.cache",
+      "/dist",
+      "/vendor"
+    ]
   }
 }

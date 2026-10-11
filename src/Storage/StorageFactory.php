@@ -13,21 +13,13 @@ class StorageFactory
 {
 
     /**
-     * @param array $config
-     * @return Filesystem
+     * @param array<string, mixed> $config
      * @throws \Exception
      */
     public static function factory(array $config): Filesystem
     {
         $adapter = AdapterFactory::factory($config);
 
-        switch ($config['adapter']) {
-            case 'local':
-            case 's3':
-            case 'sftp':
-                return new Filesystem($adapter);
-        }
-
-        throw new \Exception("Unsupported adapter " . $config['adapter']);
+        return new Filesystem($adapter);
     }
 }

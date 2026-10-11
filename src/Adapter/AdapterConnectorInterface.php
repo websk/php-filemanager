@@ -11,8 +11,7 @@ use League\Flysystem\FilesystemAdapter;
 interface AdapterConnectorInterface
 {
     /**
-     * @param array $config
-     * @return FilesystemAdapter
+     * @param array<string, mixed> $config
      */
     public function getAdapter(array $config): FilesystemAdapter;
 }
